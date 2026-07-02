@@ -51,7 +51,7 @@ capturar y `Ctrl+2` para anclar.
 ## Instalación (Linux Mint / Ubuntu)
 
 ```bash
-git clone https://github.com/TU_USUARIO/reysnap.git
+git clone https://github.com/FRJKERR/reysnap.git
 cd reysnap
 ./install.sh
 ```

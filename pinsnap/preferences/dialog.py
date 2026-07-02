@@ -40,6 +40,7 @@ from ..config import (
     DEFAULT_SHORTCUTS,
     AppConfig,
 )
+from ..i18n import LANGUAGES, tr
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +64,7 @@ class PreferencesDialog(QDialog):
             config.get("shortcuts", DEFAULT_SHORTCUTS)
         )
 
-        self.setWindowTitle("PinSnap – Preferencias")
+        self.setWindowTitle(tr("PinSnap – Preferencias"))
         self.setMinimumSize(520, 480)
         # Non-modal: a modal dialog blocks the whole app, so a capture
         # started via global hotkey would freeze under it.
@@ -82,15 +83,15 @@ class PreferencesDialog(QDialog):
         btn_layout = QHBoxLayout()
         btn_layout.addStretch()
 
-        self._btn_reset_shortcuts = QPushButton("Restablecer atajos")
+        self._btn_reset_shortcuts = QPushButton(tr("Restablecer atajos"))
         self._btn_reset_shortcuts.clicked.connect(self._reset_shortcuts)
         btn_layout.addWidget(self._btn_reset_shortcuts)
 
-        self._btn_cancel = QPushButton("Cancelar")
+        self._btn_cancel = QPushButton(tr("Cancelar"))
         self._btn_cancel.clicked.connect(self.reject)
         btn_layout.addWidget(self._btn_cancel)
 
-        self._btn_save = QPushButton("Guardar")
+        self._btn_save = QPushButton(tr("Guardar"))
         self._btn_save.setDefault(True)
         self._btn_save.clicked.connect(self._save)
         btn_layout.addWidget(self._btn_save)
@@ -110,24 +111,24 @@ class PreferencesDialog(QDialog):
         self._dir_edit = QLineEdit(str(self._config.save_directory))
         self._dir_edit.setReadOnly(True)
         dir_layout.addWidget(self._dir_edit)
-        btn_browse = QPushButton("Examinar…")
+        btn_browse = QPushButton(tr("Examinar…"))
         btn_browse.clicked.connect(self._browse_dir)
         dir_layout.addWidget(btn_browse)
-        form.addRow("Carpeta de guardado:", dir_layout)
+        form.addRow(tr("Carpeta de guardado:"), dir_layout)
 
         # Save format
         self._format_combo = QComboBox()
         self._format_combo.addItems(["png", "jpg", "bmp", "webp"])
         self._format_combo.setCurrentText(self._config.get("save_format", "png"))
-        form.addRow("Formato de imagen:", self._format_combo)
+        form.addRow(tr("Formato de imagen:"), self._format_combo)
 
         # Copy to clipboard
-        self._cb_clipboard = QCheckBox("Copiar al portapapeles tras capturar")
+        self._cb_clipboard = QCheckBox(tr("Copiar al portapapeles tras capturar"))
         self._cb_clipboard.setChecked(self._config.get("copy_to_clipboard_after_capture", True))
         form.addRow("", self._cb_clipboard)
 
         # Show cursor
-        self._cb_cursor = QCheckBox("Mostrar cursor en la captura")
+        self._cb_cursor = QCheckBox(tr("Mostrar cursor en la captura"))
         self._cb_cursor.setChecked(self._config.get("show_cursor_in_capture", False))
         form.addRow("", self._cb_cursor)
 
@@ -136,9 +137,9 @@ class PreferencesDialog(QDialog):
         self._delay_spin.setRange(0, 30)
         self._delay_spin.setSuffix(" s")
         self._delay_spin.setValue(self._config.get("capture_delay", 0))
-        form.addRow("Retardo de captura:", self._delay_spin)
+        form.addRow(tr("Retardo de captura:"), self._delay_spin)
 
-        self._tabs.addTab(page, "General")
+        self._tabs.addTab(page, tr("General"))
 
     # ------------------------------------------------------------------
     # Shortcuts tab
@@ -149,7 +150,7 @@ class PreferencesDialog(QDialog):
         layout = QVBoxLayout(page)
 
         info = QLabel(
-            "Haga clic en el campo de atajo y pulse la combinación de teclas deseada."
+            tr("Haga clic en el campo de atajo y pulse la combinación de teclas deseada.")
         )
         info.setWordWrap(True)
         info.setStyleSheet("color: gray; font-size: 11px;")
@@ -159,11 +160,11 @@ class PreferencesDialog(QDialog):
         form = QFormLayout()
 
         labels = {
-            "capture": "Capturar pantalla:",
-            "pin": "Anclar captura:",
-            "color_picker": "Selector de color:",
-            "ruler": "Regla:",
-            "annotate": "Anotar imagen:",
+            "capture": tr("Capturar pantalla:"),
+            "pin": tr("Anclar captura:"),
+            "color_picker": tr("Selector de color:"),
+            "ruler": tr("Regla:"),
+            "annotate": tr("Anotar imagen:"),
         }
 
         for action, label_text in labels.items():
@@ -178,7 +179,7 @@ class PreferencesDialog(QDialog):
         layout.addLayout(form)
         layout.addStretch()
 
-        self._tabs.addTab(page, "Atajos")
+        self._tabs.addTab(page, tr("Atajos"))
 
     # ------------------------------------------------------------------
     # Pinned tab
@@ -193,14 +194,14 @@ class PreferencesDialog(QDialog):
         self._opacity_spin.setRange(10, 100)
         self._opacity_spin.setSuffix(" %")
         self._opacity_spin.setValue(self._config.get("pin_opacity", 90))
-        form.addRow("Opacidad predeterminada:", self._opacity_spin)
+        form.addRow(tr("Opacidad predeterminada:"), self._opacity_spin)
 
         # Border
-        self._cb_border = QCheckBox("Mostrar borde en ventanas ancladas")
+        self._cb_border = QCheckBox(tr("Mostrar borde en ventanas ancladas"))
         self._cb_border.setChecked(self._config.get("pin_border", True))
         form.addRow("", self._cb_border)
 
-        self._tabs.addTab(page, "Ancladas")
+        self._tabs.addTab(page, tr("Ancladas"))
 
     # ------------------------------------------------------------------
     # Advanced tab
@@ -212,28 +213,30 @@ class PreferencesDialog(QDialog):
 
         # Theme
         self._theme_combo = QComboBox()
-        self._theme_combo.addItems(["system", "light", "dark"])
-        theme_labels = {"system": "Sistema", "light": "Claro", "dark": "Oscuro"}
-        idx = self._theme_combo.findText(self._config.get("theme", "system"))
+        for code, label in (
+            ("system", tr("Sistema")), ("light", tr("Claro")), ("dark", tr("Oscuro"))
+        ):
+            self._theme_combo.addItem(label, code)
+        idx = self._theme_combo.findData(self._config.get("theme", "system"))
         if idx >= 0:
             self._theme_combo.setCurrentIndex(idx)
-        form.addRow("Tema:", self._theme_combo)
+        form.addRow(tr("Tema:"), self._theme_combo)
 
         # Language
         self._lang_combo = QComboBox()
-        self._lang_combo.addItems(["es", "en"])
-        lang_labels = {"es": "Español", "en": "English"}
-        idx = self._lang_combo.findText(self._config.get("language", "es"))
+        for code, native_name in LANGUAGES.items():
+            self._lang_combo.addItem(native_name, code)
+        idx = self._lang_combo.findData(self._config.get("language", "es"))
         if idx >= 0:
             self._lang_combo.setCurrentIndex(idx)
-        form.addRow("Idioma:", self._lang_combo)
+        form.addRow(tr("Idioma:"), self._lang_combo)
 
         # Autostart
-        self._cb_autostart = QCheckBox("Iniciar automáticamente al iniciar sesión")
+        self._cb_autostart = QCheckBox(tr("Iniciar automáticamente al iniciar sesión"))
         self._cb_autostart.setChecked(self._config.get("autostart", False))
         form.addRow("", self._cb_autostart)
 
-        self._tabs.addTab(page, "Avanzado")
+        self._tabs.addTab(page, tr("Avanzado"))
 
     # ------------------------------------------------------------------
     # Actions
@@ -241,7 +244,7 @@ class PreferencesDialog(QDialog):
 
     def _browse_dir(self) -> None:
         path = QFileDialog.getExistingDirectory(
-            self, "Seleccionar carpeta de guardado", self._dir_edit.text()
+            self, tr("Seleccionar carpeta de guardado"), self._dir_edit.text()
         )
         if path:
             self._dir_edit.setText(path)
@@ -264,10 +267,10 @@ class PreferencesDialog(QDialog):
             if seq in seen:
                 QMessageBox.warning(
                     self,
-                    "Conflicto de atajos",
-                    f'El atajo "{seq}" está asignado tanto a '
-                    f'"{action}" como a "{seen[seq]}".\n'
-                    f"Por favor, elija atajos diferentes.",
+                    tr("Conflicto de atajos"),
+                    tr('El atajo "{seq}" está asignado a "{a}" y a "{b}".\nElija atajos diferentes.').format(
+                        seq=seq, a=action, b=seen[seq]
+                    ),
                 )
                 return False
             seen[seq] = action
@@ -296,8 +299,8 @@ class PreferencesDialog(QDialog):
         self._config.set("pin_border", self._cb_border.isChecked())
 
         # Advanced
-        self._config.set("theme", self._theme_combo.currentText())
-        self._config.set("language", self._lang_combo.currentText())
+        self._config.set("theme", self._theme_combo.currentData())
+        self._config.set("language", self._lang_combo.currentData())
         self._config.autostart = self._cb_autostart.isChecked()
 
         logger.info("Preferences saved")

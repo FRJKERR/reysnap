@@ -37,10 +37,10 @@ try:
     from pynput import keyboard
 
     _PYNPUT_AVAILABLE = True
-except ImportError:
+except Exception:  # ImportError, or X-related errors on headless systems
     keyboard = None  # type: ignore[assignment]
     _PYNPUT_AVAILABLE = False
-    logger.warning("pynput is not installed – global shortcuts will be disabled")
+    logger.warning("pynput unavailable – global shortcuts will be disabled")
 
 
 def _build_key_maps():

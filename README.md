@@ -32,14 +32,18 @@ de forma parcial, en Wayland (requiere `grim`).
   - el borde indica el estado: azul = activo, gris = inactivo,
     naranja = bloqueado.
 - **OCR local (Shift+C en la captura)** — reconoce el texto de la
-  selección con Tesseract (todo en tu máquina, español e inglés), lo
-  copia al portapapeles y lo muestra en una ventana editable.
+  selección con Tesseract, todo en tu máquina: español, inglés, chino
+  simplificado, chino tradicional y ruso. Copia el resultado al
+  portapapeles y lo muestra en una ventana editable.
 - **Selector de color (Ctrl+Shift+C)** — lupa con rejilla de píxeles;
   clic copia el HEX al portapapeles.
 - **Regla (Ctrl+Shift+R)** — mide distancias y ángulos en pantalla.
 - **Anotar imagen** — abre un archivo de imagen en el editor de anotaciones.
 - Bandeja del sistema, arranque automático al iniciar sesión y atajos
   configurables desde una interfaz gráfica (Preferencias → Atajos).
+- **Interfaz en 5 idiomas** (español, English, 简体中文, 繁體中文,
+  Русский) y **tema claro/oscuro/sistema**, ambos cambiables en vivo
+  desde Preferencias.
 
 Los atajos por defecto son los mismos que los de PixPin: `Ctrl+1` para
 capturar y `Ctrl+2` para anclar.

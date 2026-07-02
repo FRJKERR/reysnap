@@ -13,6 +13,8 @@ from PySide6.QtCore import QPoint, QRect, Qt, Signal, QTimer
 from PySide6.QtGui import QColor, QCursor, QGuiApplication, QImage, QPainter, QPen, QPixmap
 from PySide6.QtWidgets import QApplication, QWidget
 
+from ..i18n import tr
+
 logger = logging.getLogger(__name__)
 
 _MAGNIFY_RADIUS = 80  # half-size of the magnifier circle in pixels
@@ -216,7 +218,7 @@ class ColorPicker(QWidget):
         font.setPointSize(10)
         p.setFont(font)
         p.setPen(QColor(255, 255, 255, 150))
-        hint = "Clic para copiar · Esc para cancelar"
+        hint = tr("Clic para copiar · Esc para cancelar")
         p.drawText(
             self.width() - p.fontMetrics().horizontalAdvance(hint) - 20,
             bar_rect.y() + _COLOR_BAR_H // 2 + 4,

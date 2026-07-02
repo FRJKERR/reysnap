@@ -37,6 +37,7 @@ from PySide6.QtWidgets import (
 )
 
 from ..config import AppConfig
+from ..i18n import tr
 
 logger = logging.getLogger(__name__)
 
@@ -263,35 +264,35 @@ class PinWindow(QWidget):
     def contextMenuEvent(self, event) -> None:
         menu = QMenu(self)
 
-        act_copy = QAction("Copiar imagen", menu)
+        act_copy = QAction(tr("Copiar imagen"), menu)
         act_copy.triggered.connect(self._copy_to_clipboard)
         menu.addAction(act_copy)
 
-        act_save = QAction("Guardar como…", menu)
+        act_save = QAction(tr("Guardar como…"), menu)
         act_save.triggered.connect(self._save_as)
         menu.addAction(act_save)
 
         menu.addSeparator()
 
-        act_lock = QAction("Bloquear", menu)
+        act_lock = QAction(tr("Bloquear"), menu)
         act_lock.setCheckable(True)
         act_lock.setChecked(self._locked)
         act_lock.triggered.connect(self._toggle_lock)
         menu.addAction(act_lock)
 
-        act_top = QAction("Siempre visible", menu)
+        act_top = QAction(tr("Siempre visible"), menu)
         act_top.setCheckable(True)
         act_top.setChecked(self._on_top)
         act_top.triggered.connect(self._toggle_on_top)
         menu.addAction(act_top)
 
-        act_border = QAction("Mostrar borde", menu)
+        act_border = QAction(tr("Mostrar borde"), menu)
         act_border.setCheckable(True)
         act_border.setChecked(self._show_border)
         act_border.triggered.connect(self._toggle_border)
         menu.addAction(act_border)
 
-        opacity_menu = menu.addMenu("Opacidad")
+        opacity_menu = menu.addMenu(tr("Opacidad"))
         for pct in (100, 90, 75, 50, 25):
             act = QAction(f"{pct} %", opacity_menu)
             act.setCheckable(True)
@@ -299,13 +300,13 @@ class PinWindow(QWidget):
             act.triggered.connect(lambda _=False, v=pct: self._set_opacity(v))
             opacity_menu.addAction(act)
 
-        act_reset = QAction("Tamaño original (100 %)", menu)
+        act_reset = QAction(tr("Tamaño original (100 %)"), menu)
         act_reset.triggered.connect(self._reset)
         menu.addAction(act_reset)
 
         menu.addSeparator()
 
-        act_close = QAction("Cerrar\tEsc", menu)
+        act_close = QAction(tr("Cerrar") + "\tEsc", menu)
         act_close.triggered.connect(self.close)
         menu.addAction(act_close)
 
@@ -322,7 +323,7 @@ class PinWindow(QWidget):
     def _save_as(self) -> None:
         path, _ = QFileDialog.getSaveFileName(
             self,
-            "Guardar imagen anclada",
+            tr("Guardar imagen anclada"),
             str(self._config.save_directory / "pinsnap_pin.png"),
             "PNG (*.png);;JPEG (*.jpg);;BMP (*.bmp);;WebP (*.webp)",
         )

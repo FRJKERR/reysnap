@@ -21,6 +21,8 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QMenu, QSystemTrayIcon, QWidget
 
+from .i18n import tr
+
 logger = logging.getLogger(__name__)
 
 # The brand colour – a dark teal/cyan that is legible on both light
@@ -150,24 +152,29 @@ class SystemTray(QObject):
         m = self._menu
 
         entries = [
-            ("📷  Capturar pantalla", self.capture_requested),
-            ("📌  Anclar captura", self.pin_requested),
-            ("✏️  Anotar imagen", self.annotate_requested),
-            ("🔍  Selector de color", self.color_picker_requested),
-            ("📏  Regla", self.ruler_requested),
+            ("📷", "Capturar pantalla", self.capture_requested),
+            ("📌", "Anclar captura", self.pin_requested),
+            ("✏️", "Anotar imagen", self.annotate_requested),
+            ("🔍", "Selector de color", self.color_picker_requested),
+            ("📏", "Regla", self.ruler_requested),
             None,
-            ("⚙️  Preferencias", self.preferences_requested),
+            ("⚙️", "Preferencias", self.preferences_requested),
             None,
-            ("🚪  Salir", self.quit_requested),
+            ("🚪", "Salir", self.quit_requested),
         ]
         for entry in entries:
             if entry is None:
                 m.addSeparator()
                 continue
-            label, signal = entry
-            action = QAction(label, m)
+            emoji, label, signal = entry
+            action = QAction(f"{emoji}  {tr(label)}", m)
             action.triggered.connect(signal.emit)
             m.addAction(action)
+
+    def retranslate(self) -> None:
+        """Rebuild the menu in the current language."""
+        self._menu.clear()
+        self._build_menu()
 
     # ------------------------------------------------------------------
     # Internal
@@ -176,5 +183,6 @@ class SystemTray(QObject):
     def _on_activated(self, reason: QSystemTrayIcon.ActivationReason) -> None:
         """Handle left-click on the tray icon."""
         if reason == QSystemTrayIcon.ActivationReason.Trigger:
-            # tray geometry() is often empty on Linux; use the cursor
-            self._menu.exec(QCursor.pos())
+            # popup() (unlike exec()) closes when clicking outside,
+            # matching the native right-click behaviour
+            self._menu.popup(QCursor.pos())

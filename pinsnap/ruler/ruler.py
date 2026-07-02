@@ -23,6 +23,8 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QWidget
 
+from ..i18n import tr
+
 logger = logging.getLogger(__name__)
 
 
@@ -100,7 +102,7 @@ class RulerTool(QWidget):
             p.drawText(
                 self.rect(),
                 Qt.AlignmentFlag.AlignCenter,
-                "Haga clic y arrastre para medir · Esc para cancelar",
+                tr("Haga clic y arrastre para medir · Esc para cancelar"),
             )
 
         p.end()

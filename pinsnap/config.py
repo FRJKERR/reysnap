@@ -44,6 +44,7 @@ _BOOL_KEYS = {
 _STR_ENUM_KEYS = {
     "save_format": ("png", "jpg", "bmp", "webp"),
     "theme": ("system", "light", "dark"),
+    "language": ("es", "en", "zh_CN", "zh_TW", "ru"),
 }
 
 

@@ -19,6 +19,7 @@ from PySide6.QtGui import QClipboard, QGuiApplication, QPixmap
 from PySide6.QtWidgets import QApplication, QFileDialog, QWidget
 
 from .config import AppConfig
+from .i18n import set_language, tr
 from .theme import apply_theme
 from .tray import SystemTray
 from .shortcuts import GlobalShortcutManager
@@ -44,6 +45,7 @@ class PinSnapApp(QObject):
         self.app = app
         self.config = AppConfig()
         apply_theme(app, self.config.theme)
+        set_language(self.config.language)
         self.tray = SystemTray(self)
         self.shortcut_manager = GlobalShortcutManager(self)
         self._active_pinned: List[PinWindow] = []
@@ -198,7 +200,7 @@ class PinSnapApp(QObject):
         suggested = str(self.config.save_directory / f"pinsnap_{timestamp}.{fmt}")
         path, _ = QFileDialog.getSaveFileName(
             None,
-            "Guardar captura",
+            tr("Guardar captura"),
             suggested,
             "PNG (*.png);;JPEG (*.jpg);;BMP (*.bmp);;WebP (*.webp)",
         )
@@ -235,11 +237,11 @@ class PinSnapApp(QObject):
 
         text, error = ocr_pixmap(pixmap)
         if error is not None:
-            QMessageBox.warning(None, "PinSnap – OCR", error)
+            QMessageBox.warning(None, tr("PinSnap – OCR"), error)
             return
         if not text:
             QMessageBox.information(
-                None, "PinSnap – OCR", "No se reconoció ningún texto en la selección."
+                None, tr("PinSnap – OCR"), tr("No se reconoció ningún texto en la selección.")
             )
             return
 
@@ -251,18 +253,18 @@ class PinSnapApp(QObject):
         from PySide6.QtWidgets import QLabel, QPlainTextEdit, QPushButton, QVBoxLayout
 
         window = QWidget()
-        window.setWindowTitle("PinSnap – Texto reconocido")
+        window.setWindowTitle(tr("PinSnap – Texto reconocido"))
         window.resize(460, 320)
         layout = QVBoxLayout(window)
 
-        info = QLabel("El texto ya está copiado al portapapeles. Puedes editarlo aquí:")
+        info = QLabel(tr("El texto ya está copiado al portapapeles. Puedes editarlo aquí:"))
         info.setWordWrap(True)
         layout.addWidget(info)
 
         edit = QPlainTextEdit(text)
         layout.addWidget(edit)
 
-        btn = QPushButton("Copiar de nuevo y cerrar")
+        btn = QPushButton(tr("Copiar de nuevo y cerrar"))
         btn.clicked.connect(
             lambda: (QGuiApplication.clipboard().setText(edit.toPlainText()), window.close())
         )
@@ -321,9 +323,9 @@ class PinSnapApp(QObject):
         """Open a file dialog to load an image for annotation."""
         path, _ = QFileDialog.getOpenFileName(
             None,
-            "Abrir imagen para anotar",
+            tr("Abrir imagen para anotar"),
             str(self.config.save_directory),
-            "Imágenes (*.png *.jpg *.jpeg *.bmp *.webp);;Todos los archivos (*)",
+            tr("Imágenes") + " (*.png *.jpg *.jpeg *.bmp *.webp);;" + tr("Todos los archivos") + " (*)",
         )
         if path:
             pixmap = QPixmap(path)
@@ -353,6 +355,9 @@ class PinSnapApp(QObject):
 
     def _on_settings_saved(self) -> None:
         apply_theme(self.app, self.config.theme)
+        set_language(self.config.language)
+        # The tray menu is long-lived: rebuild it in the new language.
+        self.tray.retranslate()
 
     def _on_prefs_closed(self, *_args) -> None:
         if self._prefs_dialog is not None:

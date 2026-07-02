@@ -40,6 +40,7 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QHBoxLayout, QLineEdit, QToolButton, QWidget
 
+from ..i18n import tr
 from ..annotation.editor import (
     AnnotationItem,
     ArrowItem,
@@ -323,6 +324,7 @@ class CaptureOverlay(QWidget):
     def _build_toolbar(self) -> None:
         self._toolbar = QWidget(self)
         self._toolbar.setObjectName("pinsnap_tb")
+        self._toolbar.setCursor(Qt.CursorShape.ArrowCursor)
         self._toolbar.setStyleSheet(self._TB_STYLE)
         lay = QHBoxLayout(self._toolbar)
         lay.setContentsMargins(6, 4, 6, 4)
@@ -342,7 +344,7 @@ class CaptureOverlay(QWidget):
             btn.setIcon(_make_icon(kind))
             btn.setIconSize(QSize(20, 20))
             btn.setCheckable(True)
-            btn.setToolTip(tip)
+            btn.setToolTip(tr(tip))
             btn.clicked.connect(lambda checked, t=tool: self._on_tool_clicked(t, checked))
             lay.addWidget(btn)
             self._tool_buttons[tool] = btn
@@ -350,7 +352,7 @@ class CaptureOverlay(QWidget):
         undo = QToolButton(self._toolbar)
         undo.setIcon(_make_icon("undo"))
         undo.setIconSize(QSize(20, 20))
-        undo.setToolTip("Deshacer (Ctrl+Z)")
+        undo.setToolTip(tr("Deshacer (Ctrl+Z)"))
         undo.clicked.connect(self._undo)
         lay.addWidget(undo)
 
@@ -369,7 +371,7 @@ class CaptureOverlay(QWidget):
             btn = QToolButton(self._toolbar)
             btn.setIcon(_make_icon(kind))
             btn.setIconSize(QSize(20, 20))
-            btn.setToolTip(tip)
+            btn.setToolTip(tr(tip))
             btn.clicked.connect(slot)
             lay.addWidget(btn)
 
@@ -379,6 +381,7 @@ class CaptureOverlay(QWidget):
         # --- Options row (colours + stroke widths), shown with a tool ---
         self._options = QWidget(self)
         self._options.setObjectName("pinsnap_tb")
+        self._options.setCursor(Qt.CursorShape.ArrowCursor)
         self._options.setStyleSheet(self._TB_STYLE)
         opt_lay = QHBoxLayout(self._options)
         opt_lay.setContentsMargins(8, 5, 8, 5)
@@ -390,7 +393,7 @@ class CaptureOverlay(QWidget):
             btn.setCheckable(True)
             btn.setChecked(w == self._pen_width)
             btn.setFixedSize(22, 22)
-            btn.setToolTip(f"Grosor {w}px")
+            btn.setToolTip(tr("Grosor {w}px").format(w=w))
             pm = QPixmap(18, 18)
             pm.fill(Qt.GlobalColor.transparent)
             pp = QPainter(pm)
@@ -573,7 +576,7 @@ class CaptureOverlay(QWidget):
             p.drawText(
                 self.rect(),
                 Qt.AlignmentFlag.AlignCenter,
-                "Arrastre para seleccionar una región · clic = ventana · Esc para cancelar",
+                tr("Arrastre para seleccionar una región · clic = ventana · Esc para cancelar"),
             )
 
     def _paint_selection(self, p: QPainter) -> None:

@@ -38,6 +38,7 @@ fi
 if ! command -v tesseract >/dev/null; then
     echo "-> Instalando Tesseract para el OCR (español + inglés)…"
     sudo apt-get install -y tesseract-ocr tesseract-ocr-spa \
+        tesseract-ocr-chi-sim tesseract-ocr-chi-tra tesseract-ocr-rus \
         || echo "   (OCR omitido; puedes instalarlo más tarde)"
 fi
 

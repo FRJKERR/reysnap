@@ -7,6 +7,8 @@ ancla imágenes siempre visibles encima de las demás ventanas.
 Escrita en Python + PySide6. Funciona en X11 (Linux Mint / Cinnamon) y,
 de forma parcial, en Wayland (requiere `grim`).
 
+![Captura anotada con ReySnap: flechas, globos numerados, texto y recuadro](docs/screenshot.png)
+
 ## Funciones
 
 - **Captura de región (Ctrl+1)** — la pantalla se congela y puedes:

@@ -8,7 +8,7 @@ from typing import Any, Dict, Optional
 logger = logging.getLogger(__name__)
 
 # Default PixPin-compatible shortcuts.  PixPin's documented defaults
-# are Ctrl+1 (screenshot) and Ctrl+2 (pin); the rest are PinSnap
+# are Ctrl+1 (screenshot) and Ctrl+2 (pin); the rest are ReySnap
 # additions since PixPin does not document defaults for them.
 DEFAULT_SHORTCUTS: Dict[str, str] = {
     "capture": "Ctrl+1",
@@ -21,7 +21,7 @@ DEFAULT_SHORTCUTS: Dict[str, str] = {
 # Default settings
 DEFAULT_SETTINGS: Dict[str, Any] = {
     "shortcuts": DEFAULT_SHORTCUTS.copy(),
-    "save_directory": str(Path.home() / "Pictures" / "PinSnap"),
+    "save_directory": str(Path.home() / "Pictures" / "ReySnap"),
     "save_format": "png",
     "copy_to_clipboard_after_capture": True,
     "show_cursor_in_capture": False,
@@ -51,13 +51,13 @@ _STR_ENUM_KEYS = {
 class AppConfig:
     """Manages application configuration with JSON persistence.
 
-    Settings are loaded from ``~/.config/pinsnap/config.json`` on
+    Settings are loaded from ``~/.config/reysnap/config.json`` on
     instantiation.  Missing keys are back-filled from
     :data:`DEFAULT_SETTINGS` so that the file always contains a
     complete, valid configuration after the first save.
     """
 
-    CONFIG_DIR = Path.home() / ".config" / "pinsnap"
+    CONFIG_DIR = Path.home() / ".config" / "reysnap"
     CONFIG_FILE = CONFIG_DIR / "config.json"
 
     def __init__(self) -> None:
@@ -162,7 +162,7 @@ class AppConfig:
     @property
     def save_directory(self) -> Path:
         """Path to the directory where screenshots are saved."""
-        return Path(self._settings.get("save_directory", str(Path.home() / "Pictures" / "PinSnap")))
+        return Path(self._settings.get("save_directory", str(Path.home() / "Pictures" / "ReySnap")))
 
     @save_directory.setter
     def save_directory(self, value: Path) -> None:
@@ -216,20 +216,20 @@ class AppConfig:
     def _update_autostart_desktop_file(self) -> None:
         """Create or remove the XDG autostart desktop entry."""
         autostart_dir = Path.home() / ".config" / "autostart"
-        desktop_path = autostart_dir / "pinsnap.desktop"
+        desktop_path = autostart_dir / "reysnap.desktop"
 
         if self._settings.get("autostart", False):
             autostart_dir.mkdir(parents=True, exist_ok=True)
-            # Point Exec at the interpreter actually running PinSnap so
+            # Point Exec at the interpreter actually running ReySnap so
             # autostart works from a venv without anything on $PATH.
             import sys
-            exec_cmd = f'"{sys.executable}" -m pinsnap'
+            exec_cmd = f'"{sys.executable}" -m reysnap'
             desktop_path.write_text(
                 "[Desktop Entry]\n"
                 "Type=Application\n"
-                "Name=PinSnap\n"
+                "Name=ReySnap\n"
                 f"Exec={exec_cmd}\n"
-                "Icon=pinsnap\n"
+                "Icon=reysnap\n"
                 "Terminal=false\n"
                 "Categories=Utility;\n"
                 "X-GNOME-Autostart-enabled=true\n",

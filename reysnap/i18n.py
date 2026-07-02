@@ -1,4 +1,4 @@
-"""PinSnap – interface translations.
+"""ReySnap – interface translations.
 
 Spanish is the source language: every user-facing string in the code
 is written in Spanish and wrapped in :func:`tr`, which looks up the
@@ -167,9 +167,9 @@ _T: dict = {
         "ru": "Сохранить закреплённое изображение",
     },
     # ------------------------------------------------------ preferences
-    "PinSnap – Preferencias": {
-        "en": "PinSnap – Preferences", "zh_CN": "PinSnap – 偏好设置",
-        "zh_TW": "PinSnap – 偏好設定", "ru": "PinSnap – Настройки",
+    "ReySnap – Preferencias": {
+        "en": "ReySnap – Preferences", "zh_CN": "ReySnap – 偏好设置",
+        "zh_TW": "ReySnap – 偏好設定", "ru": "ReySnap – Настройки",
     },
     "Restablecer atajos": {
         "en": "Reset shortcuts", "zh_CN": "重置快捷键", "zh_TW": "重設快捷鍵",
@@ -307,9 +307,9 @@ _T: dict = {
         "zh_CN": "未在选区中识别到文字。", "zh_TW": "未在選區中辨識到文字。",
         "ru": "В выделении не распознан текст.",
     },
-    "PinSnap – Texto reconocido": {
-        "en": "PinSnap – Recognized text", "zh_CN": "PinSnap – 识别结果",
-        "zh_TW": "PinSnap – 辨識結果", "ru": "PinSnap – Распознанный текст",
+    "ReySnap – Texto reconocido": {
+        "en": "ReySnap – Recognized text", "zh_CN": "ReySnap – 识别结果",
+        "zh_TW": "ReySnap – 辨識結果", "ru": "ReySnap – Распознанный текст",
     },
     "El texto ya está copiado al portapapeles. Puedes editarlo aquí:": {
         "en": "The text is already on the clipboard. You can edit it here:",

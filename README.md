@@ -1,4 +1,4 @@
-# PinSnap
+# ReySnap
 
 Herramienta de capturas de pantalla para Linux inspirada en el flujo de
 trabajo de PixPin/Snipaste: captura, anota sobre la propia selección y
@@ -51,12 +51,12 @@ capturar y `Ctrl+2` para anclar.
 ## Instalación (Linux Mint / Ubuntu)
 
 ```bash
-git clone https://github.com/TU_USUARIO/pinsnap.git
-cd pinsnap
+git clone https://github.com/TU_USUARIO/reysnap.git
+cd reysnap
 ./install.sh
 ```
 
-El instalador crea el entorno de Python, añade **PinSnap al menú de
+El instalador crea el entorno de Python, añade **ReySnap al menú de
 aplicaciones** y lo deja **arrancando solo al iniciar sesión**. Para
 quitarlo del menú y del autoinicio: `./install.sh --uninstall`.
 
@@ -74,8 +74,8 @@ En Wayland instala además `grim` (`sudo apt install grim`).
 | `Ctrl+S` | Guardar como… |
 | Clic derecho / `Esc` | Descartar selección / cancelar |
 
-Las capturas guardadas van a `~/Imágenes/PinSnap` (configurable), y la
-configuración vive en `~/.config/pinsnap/config.json`.
+Las capturas guardadas van a `~/Imágenes/ReySnap` (configurable), y la
+configuración vive en `~/.config/reysnap/config.json`.
 
 ## Pruebas
 
@@ -102,5 +102,5 @@ Tests de humo sin abrir ventanas (modo offscreen de Qt):
 
 ## Licencia
 
-MIT. PinSnap es una reimplementación independiente inspirada en la
+MIT. ReySnap es una reimplementación independiente inspirada en la
 experiencia de uso de PixPin; no contiene código ni recursos de PixPin.

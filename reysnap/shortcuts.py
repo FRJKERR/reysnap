@@ -1,4 +1,4 @@
-"""PinSnap – global keyboard shortcut manager.
+"""ReySnap – global keyboard shortcut manager.
 
 Uses ``pynput`` to listen for key-presses at the OS level (works on
 X11; Wayland support is best-effort since :mod:`pynput` itself has

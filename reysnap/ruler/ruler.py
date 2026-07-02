@@ -1,4 +1,4 @@
-"""PinSnap – on-screen ruler / measurement tool.
+"""ReySnap – on-screen ruler / measurement tool.
 
 :class:`RulerTool` is a fullscreen overlay.  Click and drag to
 measure a distance in pixels.  The ruler displays width, height,

@@ -1,6 +1,6 @@
-"""PinSnap – system tray icon and context menu.
+"""ReySnap – system tray icon and context menu.
 
-Because PinSnap does not ship with an external icon file, a simple
+Because ReySnap does not ship with an external icon file, a simple
 camera+pin icon is procedurally drawn with :class:`QPainter`.
 """
 
@@ -95,7 +95,7 @@ def _generate_tray_icon(size: int = 64) -> QIcon:
 
 
 class SystemTray(QObject):
-    """System tray icon and context menu for PinSnap.
+    """System tray icon and context menu for ReySnap.
 
     Signals
     -------

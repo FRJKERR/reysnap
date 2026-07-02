@@ -1,6 +1,6 @@
-"""PinSnap – core application coordinator.
+"""ReySnap – core application coordinator.
 
-:class:`PinSnapApp` is the central hub that wires together every
+:class:`ReySnapApp` is the central hub that wires together every
 sub-module (capture, annotation, pin, colour-picker, ruler,
 preferences, global shortcuts and system tray).
 
@@ -34,7 +34,7 @@ from .preferences.dialog import PreferencesDialog
 logger = logging.getLogger(__name__)
 
 
-class PinSnapApp(QObject):
+class ReySnapApp(QObject):
     """Main application controller – coordinates all modules."""
 
     # Emitted whenever a screenshot has been captured (before editing).
@@ -67,7 +67,7 @@ class PinSnapApp(QObject):
         self.config.save_directory.mkdir(parents=True, exist_ok=True)
         self.tray.show()
 
-        logger.info("PinSnap %s started", self.config.get("_version", "1.0.0"))
+        logger.info("ReySnap %s started", self.config.get("_version", "1.0.0"))
 
     # ------------------------------------------------------------------
     # Window bookkeeping
@@ -197,7 +197,7 @@ class PinSnapApp(QObject):
         """Ask where to save *pixmap*, defaulting to the configured directory."""
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         fmt = self.config.save_format
-        suggested = str(self.config.save_directory / f"pinsnap_{timestamp}.{fmt}")
+        suggested = str(self.config.save_directory / f"reysnap_{timestamp}.{fmt}")
         path, _ = QFileDialog.getSaveFileName(
             None,
             tr("Guardar captura"),
@@ -213,7 +213,7 @@ class PinSnapApp(QObject):
             save_dir = self.config.save_directory
             fmt = self.config.save_format
             timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-            path = str(save_dir / f"pinsnap_{timestamp}.{fmt}")
+            path = str(save_dir / f"reysnap_{timestamp}.{fmt}")
 
         ok = pixmap.save(path)
         if ok:
@@ -237,11 +237,11 @@ class PinSnapApp(QObject):
 
         text, error = ocr_pixmap(pixmap)
         if error is not None:
-            QMessageBox.warning(None, tr("PinSnap – OCR"), error)
+            QMessageBox.warning(None, tr("ReySnap – OCR"), error)
             return
         if not text:
             QMessageBox.information(
-                None, tr("PinSnap – OCR"), tr("No se reconoció ningún texto en la selección.")
+                None, tr("ReySnap – OCR"), tr("No se reconoció ningún texto en la selección.")
             )
             return
 
@@ -253,7 +253,7 @@ class PinSnapApp(QObject):
         from PySide6.QtWidgets import QLabel, QPlainTextEdit, QPushButton, QVBoxLayout
 
         window = QWidget()
-        window.setWindowTitle(tr("PinSnap – Texto reconocido"))
+        window.setWindowTitle(tr("ReySnap – Texto reconocido"))
         window.resize(460, 320)
         layout = QVBoxLayout(window)
 
@@ -369,8 +369,8 @@ class PinSnapApp(QObject):
     # ------------------------------------------------------------------
 
     def quit(self) -> None:
-        """Gracefully shut down PinSnap."""
-        logger.info("Shutting down PinSnap…")
+        """Gracefully shut down ReySnap."""
+        logger.info("Shutting down ReySnap…")
 
         self.shortcut_manager.unregister_all()
 

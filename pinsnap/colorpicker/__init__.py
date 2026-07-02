@@ -1,1 +1,0 @@
-"""PinSnap colour picker package."""

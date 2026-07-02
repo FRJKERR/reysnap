@@ -1,11 +1,11 @@
-"""Offscreen smoke tests for PinSnap (no real display needed)."""
+"""Offscreen smoke tests for ReySnap (no real display needed)."""
 import os
 import sys
 import tempfile
 
 os.environ["QT_QPA_PLATFORM"] = "offscreen"
 # Isolate config writes from the user's real ~/.config
-fake_home = tempfile.mkdtemp(prefix="pinsnap_test_home_")
+fake_home = tempfile.mkdtemp(prefix="reysnap_test_home_")
 os.environ["HOME"] = fake_home
 
 sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parent.parent))
@@ -25,18 +25,18 @@ def check(name, fn):
 
 # ----------------------------------------------------------------- imports
 def test_imports():
-    import pinsnap.main
-    import pinsnap.app
-    import pinsnap.config
-    import pinsnap.shortcuts
-    import pinsnap.tray
-    import pinsnap.capture.backend
-    import pinsnap.capture.overlay
-    import pinsnap.annotation.editor
-    import pinsnap.pin.pin_window
-    import pinsnap.colorpicker.picker
-    import pinsnap.ruler.ruler
-    import pinsnap.preferences.dialog
+    import reysnap.main
+    import reysnap.app
+    import reysnap.config
+    import reysnap.shortcuts
+    import reysnap.tray
+    import reysnap.capture.backend
+    import reysnap.capture.overlay
+    import reysnap.annotation.editor
+    import reysnap.pin.pin_window
+    import reysnap.colorpicker.picker
+    import reysnap.ruler.ruler
+    import reysnap.preferences.dialog
 
 check("import all modules", test_imports)
 
@@ -49,7 +49,7 @@ app = QApplication(sys.argv)
 
 # ----------------------------------------------------------------- config
 def test_config():
-    from pinsnap.config import AppConfig, DEFAULT_SHORTCUTS
+    from reysnap.config import AppConfig, DEFAULT_SHORTCUTS
     cfg = AppConfig()
     # PixPin's documented defaults: Ctrl+1 screenshot, Ctrl+2 pin
     assert cfg.get_shortcut("capture") == "Ctrl+1", cfg.get_shortcut("capture")
@@ -68,7 +68,7 @@ check("config load/save/validate", test_config)
 
 # ----------------------------------------------------------------- shortcuts
 def test_i18n_complete():
-    from pinsnap.i18n import _T, LANGUAGES, set_language, tr
+    from reysnap.i18n import _T, LANGUAGES, set_language, tr
     others = [code for code in LANGUAGES if code != "es"]
     for source, translations in _T.items():
         missing = [code for code in others if code not in translations]
@@ -83,7 +83,7 @@ def test_i18n_complete():
 check("i18n: 5 idiomas completos y fallback seguro", test_i18n_complete)
 
 def test_shortcut_parsing():
-    from pinsnap.shortcuts import GlobalShortcutManager, _PYNPUT_AVAILABLE
+    from reysnap.shortcuts import GlobalShortcutManager, _PYNPUT_AVAILABLE
     if not _PYNPUT_AVAILABLE:
         print("      (pynput no disponible aquí; se omite)")
         return
@@ -100,7 +100,7 @@ def test_shortcut_parsing():
     assert mgr._normalise_key(keyboard.KeyCode(vk=255)) is None
 
 def test_shortcut_fire_once():
-    from pinsnap.shortcuts import GlobalShortcutManager, _PYNPUT_AVAILABLE
+    from reysnap.shortcuts import GlobalShortcutManager, _PYNPUT_AVAILABLE
     if not _PYNPUT_AVAILABLE:
         print("      (pynput no disponible aquí; se omite)")
         return
@@ -122,7 +122,7 @@ check("shortcut fires once per press (main-thread dispatch)", test_shortcut_fire
 
 # ----------------------------------------------------------------- overlay
 def make_fake_backend(w=800, h=600):
-    from pinsnap.capture.backend import CaptureBackend
+    from reysnap.capture.backend import CaptureBackend
     class FakeBackend(CaptureBackend):
         def capture_screen(self, region=None):
             pm = QPixmap(w, h)
@@ -133,8 +133,8 @@ def make_fake_backend(w=800, h=600):
     return FakeBackend()
 
 def test_overlay_flow():
-    from pinsnap.capture.overlay import CaptureOverlay, _State, _Tool
-    from pinsnap.annotation.editor import RectItem
+    from reysnap.capture.overlay import CaptureOverlay, _State, _Tool
+    from reysnap.annotation.editor import RectItem
     ov = CaptureOverlay(make_fake_backend())
     ov.resize(800, 600)
     # simulate drag selection
@@ -158,7 +158,7 @@ def test_overlay_flow():
     ov.close()
 
 def test_overlay_finish_signal():
-    from pinsnap.capture.overlay import CaptureOverlay, _State
+    from reysnap.capture.overlay import CaptureOverlay, _State
     ov = CaptureOverlay(make_fake_backend(), default_action="pin")
     ov.resize(800, 600)
     ov._sel = QRect(10, 10, 100, 80)
@@ -171,8 +171,8 @@ def test_overlay_finish_signal():
 
 def test_overlay_paint():
     # Exercise every paint path (picking, selected+items, magnifier)
-    from pinsnap.capture.overlay import CaptureOverlay, _State
-    from pinsnap.annotation.editor import ArrowItem, FreehandItem, TextItem, EllipseItem
+    from reysnap.capture.overlay import CaptureOverlay, _State
+    from reysnap.annotation.editor import ArrowItem, FreehandItem, TextItem, EllipseItem
     ov = CaptureOverlay(make_fake_backend())
     ov.resize(800, 600)
     target = QImage(800, 600, QImage.Format.Format_ARGB32)
@@ -191,7 +191,7 @@ def test_overlay_paint():
     ov.close()
 
 def test_overlay_resize_logic():
-    from pinsnap.capture.overlay import CaptureOverlay, _State
+    from reysnap.capture.overlay import CaptureOverlay, _State
     ov = CaptureOverlay(make_fake_backend())
     ov.resize(800, 600)
     ov._sel = QRect(100, 100, 200, 150)
@@ -212,8 +212,8 @@ def test_overlay_resize_logic():
 def test_number_balloons():
     from PySide6.QtCore import QEvent, QPointF
     from PySide6.QtGui import QMouseEvent
-    from pinsnap.capture.overlay import CaptureOverlay, _State, _Tool
-    from pinsnap.annotation.editor import NumberItem
+    from reysnap.capture.overlay import CaptureOverlay, _State, _Tool
+    from reysnap.annotation.editor import NumberItem
 
     def press(ov, x, y):
         ev = QMouseEvent(
@@ -252,7 +252,7 @@ check("overlay edge hit-testing / resize", test_overlay_resize_logic)
 
 # ----------------------------------------------------------------- backends
 def test_backend_factory():
-    from pinsnap.capture.backend import get_capture_backend, QtCaptureBackend
+    from reysnap.capture.backend import get_capture_backend, QtCaptureBackend
     b = get_capture_backend()
     assert b is not None
     # offscreen: Qt grab may be null, but must not raise
@@ -262,8 +262,8 @@ check("backend factory (offscreen)", test_backend_factory)
 
 # ----------------------------------------------------------------- pin window
 def test_pin_window():
-    from pinsnap.pin.pin_window import PinWindow
-    from pinsnap.config import AppConfig
+    from reysnap.pin.pin_window import PinWindow
+    from reysnap.config import AppConfig
     pm = QPixmap(200, 150)
     pm.fill(QColor("red"))
     pin = PinWindow(pm, AppConfig())
@@ -276,8 +276,8 @@ def test_pin_window():
 def test_pin_interactions():
     from PySide6.QtCore import QPoint, QPointF
     from PySide6.QtGui import QWheelEvent
-    from pinsnap.pin.pin_window import PinWindow
-    from pinsnap.config import AppConfig
+    from reysnap.pin.pin_window import PinWindow
+    from reysnap.config import AppConfig
 
     def wheel(pin, dy, mods=Qt.KeyboardModifier.NoModifier):
         ev = QWheelEvent(
@@ -321,7 +321,7 @@ check("pin zoom/opacity/lock/reset (PixPin interactions)", test_pin_interactions
 # ----------------------------------------------------------------- theme
 def test_theme():
     from PySide6.QtGui import QPalette
-    from pinsnap.theme import apply_theme
+    from reysnap.theme import apply_theme
     apply_theme(app, "dark")
     dark_window = app.palette().color(QPalette.ColorRole.Window)
     assert dark_window.lightness() < 100, dark_window.name()
@@ -334,7 +334,7 @@ check("theme switches dark/light/system", test_theme)
 
 # ----------------------------------------------------------------- OCR
 def test_ocr_graceful():
-    from pinsnap.ocr import ocr_available, ocr_pixmap
+    from reysnap.ocr import ocr_available, ocr_pixmap
     pm = QPixmap(200, 60)
     pm.fill(QColor("white"))
     text, error = ocr_pixmap(pm)
@@ -349,8 +349,8 @@ check("OCR degrades gracefully without tesseract", test_ocr_graceful)
 
 # ----------------------------------------------------------------- app wiring
 def test_app_controller():
-    from pinsnap.app import PinSnapApp
-    ctrl = PinSnapApp(app)
+    from reysnap.app import ReySnapApp
+    ctrl = ReySnapApp(app)
     # finished-capture path: pin action creates a PinWindow
     pm = QPixmap(120, 90)
     pm.fill(QColor("green"))

@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="pinsnap",
+    name="reysnap",
     version="1.0.0",
     description="A PixPin-like screenshot, annotation, and pin tool for Linux",
     long_description=open("README.md").read() if __import__("os").path.exists("README.md") else "",
@@ -9,16 +9,16 @@ setup(
     author="reyartus",
     license="MIT",
     packages=[
-        "pinsnap",
-        "pinsnap.capture",
-        "pinsnap.annotation",
-        "pinsnap.pin",
-        "pinsnap.colorpicker",
-        "pinsnap.ruler",
-        "pinsnap.preferences",
+        "reysnap",
+        "reysnap.capture",
+        "reysnap.annotation",
+        "reysnap.pin",
+        "reysnap.colorpicker",
+        "reysnap.ruler",
+        "reysnap.preferences",
     ],
     package_data={
-        "pinsnap": [],
+        "reysnap": [],
     },
     install_requires=[
         "PySide6>=6.6.0",
@@ -30,7 +30,7 @@ setup(
     python_requires=">=3.9",
     entry_points={
         "console_scripts": [
-            "pinsnap=pinsnap.main:main",
+            "reysnap=reysnap.main:main",
         ],
     },
     classifiers=[

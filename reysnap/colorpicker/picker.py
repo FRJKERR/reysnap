@@ -1,4 +1,4 @@
-"""PinSnap – screen colour picker.
+"""ReySnap – screen colour picker.
 
 :class:`ColorPicker` presents a fullscreen, translucent overlay.
 Moving the mouse shows a magnified view with the colour under the

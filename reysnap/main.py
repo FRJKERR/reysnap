@@ -1,7 +1,7 @@
-"""PinSnap – entry point.
+"""ReySnap – entry point.
 
 Creates the :class:`QApplication`, enforces single-instance via
-:class:`QSharedMemory`, and hands control to :class:`PinSnapApp`.
+:class:`QSharedMemory`, and hands control to :class:`ReySnapApp`.
 """
 
 import os
@@ -10,16 +10,16 @@ from PySide6.QtWidgets import QApplication
 from PySide6.QtCore import QSharedMemory
 
 from . import __app_name__, __version__
-from .app import PinSnapApp
+from .app import ReySnapApp
 
 
 def main() -> int:
     """Application entry point.  Returns an exit code."""
 
     # ------------------------------------------------------------------
-    # Single-instance guard – one PinSnap process per user UID.
+    # Single-instance guard – one ReySnap process per user UID.
     # ------------------------------------------------------------------
-    shared_memory = QSharedMemory(f"pinsnap_single_instance_{os.getuid()}")
+    shared_memory = QSharedMemory(f"reysnap_single_instance_{os.getuid()}")
     if not shared_memory.create(1):
         # On Linux the segment can survive a crash; attach+detach frees
         # a stale one, after which create() succeeds again.
@@ -52,7 +52,7 @@ def main() -> int:
     # ------------------------------------------------------------------
     # Core application
     # ------------------------------------------------------------------
-    pinsnap = PinSnapApp(app)  # noqa: F841 – prevents GC
+    reysnap = ReySnapApp(app)  # noqa: F841 – prevents GC
 
     return app.exec()
 

@@ -1,0 +1,1 @@
+"""ReySnap colour picker package."""

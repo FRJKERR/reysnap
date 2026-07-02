@@ -1,0 +1,1 @@
+"""ReySnap preferences package."""

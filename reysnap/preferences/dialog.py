@@ -1,4 +1,4 @@
-"""PinSnap – preferences dialog.
+"""ReySnap – preferences dialog.
 
 :class:`PreferencesDialog` presents a tabbed dialog with:
 
@@ -46,7 +46,7 @@ logger = logging.getLogger(__name__)
 
 
 class PreferencesDialog(QDialog):
-    """Preferences dialog for PinSnap.
+    """Preferences dialog for ReySnap.
 
     Signals
     -------
@@ -64,7 +64,7 @@ class PreferencesDialog(QDialog):
             config.get("shortcuts", DEFAULT_SHORTCUTS)
         )
 
-        self.setWindowTitle(tr("PinSnap – Preferencias"))
+        self.setWindowTitle(tr("ReySnap – Preferencias"))
         self.setMinimumSize(520, 480)
         # Non-modal: a modal dialog blocks the whole app, so a capture
         # started via global hotkey would freeze under it.

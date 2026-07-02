@@ -1,4 +1,4 @@
-"""PinSnap – application theming (system / light / dark).
+"""ReySnap – application theming (system / light / dark).
 
 Qt does not switch palettes automatically when the user picks a theme
 in Preferences, so this module owns that: ``apply_theme`` swaps the

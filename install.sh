@@ -1,30 +1,30 @@
 #!/usr/bin/env bash
-# Instalador de PinSnap para Linux Mint / Ubuntu.
+# Instalador de ReySnap para Linux Mint / Ubuntu.
 #
 # Uso:  ./install.sh
 #
 # Crea un entorno virtual junto al código, instala las dependencias,
-# añade PinSnap al menú de aplicaciones y lo deja arrancando solo al
+# añade ReySnap al menú de aplicaciones y lo deja arrancando solo al
 # iniciar sesión.  Para desinstalar: ./install.sh --uninstall
 
 set -euo pipefail
 
 APP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VENV="$APP_DIR/.venv"
-BIN="$VENV/bin/pinsnap"
+BIN="$VENV/bin/reysnap"
 DESKTOP_DIR="$HOME/.local/share/applications"
 AUTOSTART_DIR="$HOME/.config/autostart"
 ICON_DIR="$HOME/.local/share/icons/hicolor/128x128/apps"
 
 if [[ "${1:-}" == "--uninstall" ]]; then
-    rm -f "$DESKTOP_DIR/pinsnap.desktop" "$AUTOSTART_DIR/pinsnap.desktop" \
-          "$ICON_DIR/pinsnap.png"
-    echo "PinSnap eliminado del menú y del arranque automático."
+    rm -f "$DESKTOP_DIR/reysnap.desktop" "$AUTOSTART_DIR/reysnap.desktop" \
+          "$ICON_DIR/reysnap.png"
+    echo "ReySnap eliminado del menú y del arranque automático."
     echo "El código y el entorno virtual siguen en: $APP_DIR"
     exit 0
 fi
 
-echo "== PinSnap: instalación =="
+echo "== ReySnap: instalación =="
 
 # ----------------------------------------------------------------------
 # 1. Dependencia del sistema (PySide6 la necesita para X11)
@@ -57,15 +57,15 @@ echo "-> Instalando dependencias…"
 # 3. Icono y entrada de menú
 # ----------------------------------------------------------------------
 mkdir -p "$DESKTOP_DIR" "$AUTOSTART_DIR" "$ICON_DIR"
-cp "$APP_DIR/resources/icons/pinsnap.png" "$ICON_DIR/pinsnap.png"
+cp "$APP_DIR/resources/icons/reysnap.png" "$ICON_DIR/reysnap.png"
 
-cat > "$DESKTOP_DIR/pinsnap.desktop" <<EOF
+cat > "$DESKTOP_DIR/reysnap.desktop" <<EOF
 [Desktop Entry]
 Type=Application
-Name=PinSnap
+Name=ReySnap
 Comment=Capturas de pantalla, anotaciones y anclado (estilo PixPin)
 Exec=$BIN
-Icon=pinsnap
+Icon=reysnap
 Terminal=false
 Categories=Utility;Graphics;
 StartupNotify=false
@@ -74,12 +74,12 @@ EOF
 # ----------------------------------------------------------------------
 # 4. Arranque automático al iniciar sesión
 # ----------------------------------------------------------------------
-cp "$DESKTOP_DIR/pinsnap.desktop" "$AUTOSTART_DIR/pinsnap.desktop"
-echo "X-GNOME-Autostart-enabled=true" >> "$AUTOSTART_DIR/pinsnap.desktop"
+cp "$DESKTOP_DIR/reysnap.desktop" "$AUTOSTART_DIR/reysnap.desktop"
+echo "X-GNOME-Autostart-enabled=true" >> "$AUTOSTART_DIR/reysnap.desktop"
 
 echo
 echo "== Listo =="
-echo "  • Menú:        busca 'PinSnap' en el menú de aplicaciones"
+echo "  • Menú:        busca 'ReySnap' en el menú de aplicaciones"
 echo "  • Autoinicio:  arrancará solo la próxima vez que inicies sesión"
 echo "  • Ahora mismo: $BIN &"
 echo "  • Atajos:      Ctrl+1 captura · Ctrl+2 ancla"

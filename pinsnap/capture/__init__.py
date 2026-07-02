@@ -1,1 +1,0 @@
-"""PinSnap capture backend package."""

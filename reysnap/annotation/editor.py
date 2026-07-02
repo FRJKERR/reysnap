@@ -1,4 +1,4 @@
-"""PinSnap – image annotation editor.
+"""ReySnap – image annotation editor.
 
 :class:`AnnotationEditor` is a QMainWindow that lets the user draw
 arrows, rectangles, ellipses, freehand, text, and highlights on a
@@ -430,7 +430,7 @@ class AnnotationEditor(QMainWindow):
         self._canvas.mouseReleaseEvent = self._on_mouse_release
         self._canvas.keyPressEvent = self._on_key
 
-        self.setWindowTitle("PinSnap – Anotación")
+        self.setWindowTitle("ReySnap – Anotación")
         self.resize(min(pixmap.width() + 80, 1400), min(pixmap.height() + 120, 900))
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 

@@ -1,4 +1,4 @@
-"""PinSnap – PixPin-style capture overlay.
+"""ReySnap – PixPin-style capture overlay.
 
 A single fullscreen surface that handles the whole capture flow the
 way PixPin/Snipaste do:
@@ -306,7 +306,7 @@ class CaptureOverlay(QWidget):
     # ------------------------------------------------------------------
 
     _TB_STYLE = """
-    QWidget#pinsnap_tb {
+    QWidget#reysnap_tb {
         background: #2D2D30;
         border: 1px solid #3F3F46;
         border-radius: 6px;
@@ -323,7 +323,7 @@ class CaptureOverlay(QWidget):
 
     def _build_toolbar(self) -> None:
         self._toolbar = QWidget(self)
-        self._toolbar.setObjectName("pinsnap_tb")
+        self._toolbar.setObjectName("reysnap_tb")
         self._toolbar.setCursor(Qt.CursorShape.ArrowCursor)
         self._toolbar.setStyleSheet(self._TB_STYLE)
         lay = QHBoxLayout(self._toolbar)
@@ -380,7 +380,7 @@ class CaptureOverlay(QWidget):
 
         # --- Options row (colours + stroke widths), shown with a tool ---
         self._options = QWidget(self)
-        self._options.setObjectName("pinsnap_tb")
+        self._options.setObjectName("reysnap_tb")
         self._options.setCursor(Qt.CursorShape.ArrowCursor)
         self._options.setStyleSheet(self._TB_STYLE)
         opt_lay = QHBoxLayout(self._options)

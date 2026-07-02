@@ -1,4 +1,4 @@
-"""PinSnap – pinned screenshot window.
+"""ReySnap – pinned screenshot window.
 
 :class:`PinWindow` displays a screenshot as an always-on-top, frameless
 floating image, replicating PixPin's documented pin interactions:
@@ -324,7 +324,7 @@ class PinWindow(QWidget):
         path, _ = QFileDialog.getSaveFileName(
             self,
             tr("Guardar imagen anclada"),
-            str(self._config.save_directory / "pinsnap_pin.png"),
+            str(self._config.save_directory / "reysnap_pin.png"),
             "PNG (*.png);;JPEG (*.jpg);;BMP (*.bmp);;WebP (*.webp)",
         )
         if path:

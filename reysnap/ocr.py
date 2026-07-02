@@ -1,4 +1,4 @@
-"""PinSnap – local text recognition (OCR) via Tesseract.
+"""ReySnap – local text recognition (OCR) via Tesseract.
 
 Everything runs locally (like PixPin's OCR).  The heavy lifting is
 done by the ``tesseract`` binary through :mod:`pytesseract`; both are

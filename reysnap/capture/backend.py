@@ -1,4 +1,4 @@
-"""PinSnap capture backend abstraction.
+"""ReySnap capture backend abstraction.
 
 Provides :func:`get_capture_backend` which returns the best available
 backend for the current desktop environment.

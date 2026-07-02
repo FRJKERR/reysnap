@@ -1,1 +1,0 @@
-"""PinSnap ruler package."""

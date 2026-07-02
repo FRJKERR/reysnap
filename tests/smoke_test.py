@@ -253,7 +253,50 @@ def test_pin_window():
     pin.close()
     assert closed
 
+def test_pin_interactions():
+    from PySide6.QtCore import QPoint, QPointF
+    from PySide6.QtGui import QWheelEvent
+    from pinsnap.pin.pin_window import PinWindow
+    from pinsnap.config import AppConfig
+
+    def wheel(pin, dy, mods=Qt.KeyboardModifier.NoModifier):
+        ev = QWheelEvent(
+            QPointF(50, 50), QPointF(50, 50), QPoint(0, 0), QPoint(0, dy),
+            Qt.MouseButton.NoButton, mods, Qt.ScrollPhase.NoScrollPhase, False,
+        )
+        pin.wheelEvent(ev)
+
+    pm = QPixmap(200, 150)
+    pm.fill(QColor("red"))
+    pin = PinWindow(pm, AppConfig())
+    pin.show()
+    assert (pin.width(), pin.height()) == (200, 150)
+
+    # wheel up zooms in (aspect ratio preserved)
+    wheel(pin, 120)
+    assert pin.width() > 200
+    assert abs(pin.width() / pin.height() - 200 / 150) < 0.05
+
+    # Ctrl+wheel down lowers opacity
+    op0 = pin._opacity
+    wheel(pin, -120, Qt.KeyboardModifier.ControlModifier)
+    assert pin._opacity == op0 - 5, (op0, pin._opacity)
+
+    # locked pin ignores zoom
+    pin._toggle_lock()
+    w_locked = pin.width()
+    wheel(pin, 120)
+    assert pin.width() == w_locked
+    pin._toggle_lock()
+
+    # middle-click reset restores original size and configured opacity
+    pin._reset()
+    assert (pin.width(), pin.height()) == (200, 150)
+    assert pin._opacity == AppConfig().pin_opacity
+    pin.close()
+
 check("pin window open/close", test_pin_window)
+check("pin zoom/opacity/lock/reset (PixPin interactions)", test_pin_interactions)
 
 # ----------------------------------------------------------------- app wiring
 def test_app_controller():

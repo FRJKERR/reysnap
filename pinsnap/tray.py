@@ -12,6 +12,7 @@ from PySide6.QtGui import (
     QBrush,
     QColor,
     QConicalGradient,
+    QCursor,
     QFont,
     QIcon,
     QPainter,
@@ -175,4 +176,5 @@ class SystemTray(QObject):
     def _on_activated(self, reason: QSystemTrayIcon.ActivationReason) -> None:
         """Handle left-click on the tray icon."""
         if reason == QSystemTrayIcon.ActivationReason.Trigger:
-            self._menu.exec(self._tray.geometry().center())
+            # tray geometry() is often empty on Linux; use the cursor
+            self._menu.exec(QCursor.pos())

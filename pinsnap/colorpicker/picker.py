@@ -57,9 +57,21 @@ class ColorPicker(QWidget):
 
     def showEvent(self, event) -> None:
         super().showEvent(event)
-        self.showFullScreen()
+        # BypassWindowManagerHint means the WM ignores fullscreen requests
+        # and never assigns keyboard focus: set the geometry and grab the
+        # keyboard ourselves.
+        screen = QGuiApplication.screenAt(QCursor.pos()) or QGuiApplication.primaryScreen()
+        if screen:
+            self.setGeometry(screen.geometry())
         # Grab the screen beneath us
         self._grab_screen()
+        self.activateWindow()
+        self.raise_()
+        self.grabKeyboard()
+
+    def closeEvent(self, event) -> None:
+        self.releaseKeyboard()
+        super().closeEvent(event)
 
     def _grab_screen(self) -> None:
         """Capture the current screen content."""

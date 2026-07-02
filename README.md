@@ -22,8 +22,15 @@ de forma parcial, en Wayland (requiere `grim`).
     selección (anclar), **Ctrl+S** (guardar) o **Esc** (cancelar).
 - **Anclar (Ctrl+2)** — si hay una imagen en el portapapeles la ancla
   directamente; si no, abre una captura cuya acción por defecto es anclar.
-  Las imágenes ancladas se mueven, redimensionan, y se cierran con clic
-  central o Esc.
+  Las imágenes ancladas se comportan como en PixPin:
+  - **rueda del ratón** = zoom (5 %–500 %), **Ctrl+rueda** = opacidad,
+    **clic central** = restaurar tamaño y opacidad;
+  - arrastrar desde un borde redimensiona manteniendo la proporción;
+  - **L** bloquea el pin, **T** alterna "siempre visible",
+    **doble clic / Esc / Ctrl+W** lo cierran;
+  - clic derecho abre el menú (copiar, guardar, bloquear, opacidad…);
+  - el borde indica el estado: azul = activo, gris = inactivo,
+    naranja = bloqueado.
 - **Selector de color (Ctrl+Shift+C)** — lupa con rejilla de píxeles;
   clic copia el HEX al portapapeles.
 - **Regla (Ctrl+Shift+R)** — mide distancias y ángulos en pantalla.

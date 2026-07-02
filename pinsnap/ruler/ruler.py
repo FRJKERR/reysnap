@@ -60,10 +60,20 @@ class RulerTool(QWidget):
 
     def showEvent(self, event) -> None:
         super().showEvent(event)
-        self.showFullScreen()
+        # BypassWindowManagerHint means the WM ignores fullscreen requests
+        # and never assigns keyboard focus: set the geometry and grab the
+        # keyboard ourselves.
         screen = QGuiApplication.primaryScreen()
         if screen:
+            self.setGeometry(screen.geometry())
             self._bg_pixmap = screen.grabWindow(0)
+        self.activateWindow()
+        self.raise_()
+        self.grabKeyboard()
+
+    def closeEvent(self, event) -> None:
+        self.releaseKeyboard()
+        super().closeEvent(event)
 
     # ------------------------------------------------------------------
     # Painting

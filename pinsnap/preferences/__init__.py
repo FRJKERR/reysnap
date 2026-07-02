@@ -1,0 +1,1 @@
+"""PinSnap preferences package."""

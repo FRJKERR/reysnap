@@ -1,0 +1,1 @@
+"""PinSnap annotation package."""

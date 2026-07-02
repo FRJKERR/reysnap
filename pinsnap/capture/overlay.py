@@ -185,6 +185,21 @@ def _make_icon(kind: str, size: int = 20) -> QIcon:
         p.drawLine(m + 3, m, m + 3, m + 5)
         p.drawLine(size - m - 3, m, size - m - 3, m + 5)
         p.drawRect(m + 4, size // 2 + 1, size - 2 * m - 8, size - m - (size // 2 + 1))
+    elif kind == "ocr":
+        # Corner brackets around a letter, like a scan frame
+        c = 5
+        p.drawLine(m - 1, m, m - 1 + c, m)
+        p.drawLine(m - 1, m, m - 1, m + c)
+        p.drawLine(size - m + 1, m, size - m + 1 - c, m)
+        p.drawLine(size - m + 1, m, size - m + 1, m + c)
+        p.drawLine(m - 1, size - m, m - 1 + c, size - m)
+        p.drawLine(m - 1, size - m, m - 1, size - m - c)
+        p.drawLine(size - m + 1, size - m, size - m + 1 - c, size - m)
+        p.drawLine(size - m + 1, size - m, size - m + 1, size - m - c)
+        f = QFont("Sans", int(size * 0.42))
+        f.setBold(True)
+        p.setFont(f)
+        p.drawText(pm.rect(), Qt.AlignmentFlag.AlignCenter, "A")
     elif kind == "close":
         p.drawLine(m + 1, m + 1, size - m - 1, size - m - 1)
         p.drawLine(size - m - 1, m + 1, m + 1, size - m - 1)
@@ -345,7 +360,8 @@ class CaptureOverlay(QWidget):
         lay.addWidget(sep)
 
         for kind, tip, slot in [
-            ("pin", "Anclar a la pantalla (F3)", lambda: self._finish("pin")),
+            ("pin", "Anclar a la pantalla (Ctrl+2)", lambda: self._finish("pin")),
+            ("ocr", "Reconocer texto – OCR (Shift+C)", lambda: self._finish("ocr")),
             ("save", "Guardar como… (Ctrl+S)", lambda: self._finish("save")),
             ("close", "Cancelar (Esc)", self._cancel),
             ("check", "Copiar y cerrar (Enter)", lambda: self._finish("copy")),
@@ -1041,8 +1057,10 @@ class CaptureOverlay(QWidget):
                 self._cancel()
         elif key in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
             self._finish(self._default_action)
-        elif key == Qt.Key.Key_F3:
+        elif key == Qt.Key.Key_2 and mods & Qt.KeyboardModifier.ControlModifier:
             self._finish("pin")
+        elif key == Qt.Key.Key_C and mods & Qt.KeyboardModifier.ShiftModifier:
+            self._finish("ocr")
         elif key == Qt.Key.Key_C and mods & Qt.KeyboardModifier.ControlModifier:
             self._finish("copy")
         elif key == Qt.Key.Key_S and mods & Qt.KeyboardModifier.ControlModifier:

@@ -31,6 +31,9 @@ de forma parcial, en Wayland (requiere `grim`).
   - clic derecho abre el menú (copiar, guardar, bloquear, opacidad…);
   - el borde indica el estado: azul = activo, gris = inactivo,
     naranja = bloqueado.
+- **OCR local (Shift+C en la captura)** — reconoce el texto de la
+  selección con Tesseract (todo en tu máquina, español e inglés), lo
+  copia al portapapeles y lo muestra en una ventana editable.
 - **Selector de color (Ctrl+Shift+C)** — lupa con rejilla de píxeles;
   clic copia el HEX al portapapeles.
 - **Regla (Ctrl+Shift+R)** — mide distancias y ángulos en pantalla.
@@ -80,7 +83,6 @@ Tests de humo sin abrir ventanas (modo offscreen de Qt):
 
 ## Hoja de ruta
 
-- OCR local (Tesseract)
 - Grabación de pantalla en GIF
 - Captura con desplazamiento (scroll largo)
 - Anotar imágenes ya ancladas (tecla Espacio sobre un pin)

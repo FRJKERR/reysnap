@@ -20,14 +20,12 @@ setup(
     package_data={
         "pinsnap": [],
     },
-    data_files=[
-        ("share/applications", ["resources/autostart/pinsnap.desktop"]),
-    ],
     install_requires=[
         "PySide6>=6.6.0",
         "Pillow>=10.0.0",
         "python-xlib>=0.33",
         "pynput>=1.7.6",
+        "pytesseract>=0.3.10",
     ],
     python_requires=">=3.9",
     entry_points={

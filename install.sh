@@ -34,6 +34,13 @@ if ! ldconfig -p | grep -q libxcb-cursor; then
     sudo apt-get install -y libxcb-cursor0
 fi
 
+# Tesseract habilita el OCR (opcional pero recomendado)
+if ! command -v tesseract >/dev/null; then
+    echo "-> Instalando Tesseract para el OCR (español + inglés)…"
+    sudo apt-get install -y tesseract-ocr tesseract-ocr-spa \
+        || echo "   (OCR omitido; puedes instalarlo más tarde)"
+fi
+
 # ----------------------------------------------------------------------
 # 2. Entorno de Python
 # ----------------------------------------------------------------------

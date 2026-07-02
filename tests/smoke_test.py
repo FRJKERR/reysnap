@@ -298,6 +298,35 @@ def test_pin_interactions():
 check("pin window open/close", test_pin_window)
 check("pin zoom/opacity/lock/reset (PixPin interactions)", test_pin_interactions)
 
+# ----------------------------------------------------------------- theme
+def test_theme():
+    from PySide6.QtGui import QPalette
+    from pinsnap.theme import apply_theme
+    apply_theme(app, "dark")
+    dark_window = app.palette().color(QPalette.ColorRole.Window)
+    assert dark_window.lightness() < 100, dark_window.name()
+    apply_theme(app, "light")
+    light_window = app.palette().color(QPalette.ColorRole.Window)
+    assert light_window.lightness() > dark_window.lightness()
+    apply_theme(app, "system")  # restores the startup palette
+
+check("theme switches dark/light/system", test_theme)
+
+# ----------------------------------------------------------------- OCR
+def test_ocr_graceful():
+    from pinsnap.ocr import ocr_available, ocr_pixmap
+    pm = QPixmap(200, 60)
+    pm.fill(QColor("white"))
+    text, error = ocr_pixmap(pm)
+    if ocr_available():
+        # blank image → empty text, no error
+        assert error is None, error
+    else:
+        # missing dependency → actionable message, never a crash
+        assert text is None and error and "tesseract" in error.lower(), (text, error)
+
+check("OCR degrades gracefully without tesseract", test_ocr_graceful)
+
 # ----------------------------------------------------------------- app wiring
 def test_app_controller():
     from pinsnap.app import PinSnapApp
@@ -313,6 +342,15 @@ def test_app_controller():
     # F3 with image in clipboard pins directly (no overlay)
     ctrl.start_pin_capture()
     assert len(ctrl._active_pinned) == 2
+    # Preferences must be non-modal (show_preferences returns immediately)
+    ctrl.show_preferences()
+    assert ctrl._prefs_dialog is not None and ctrl._prefs_dialog.isVisible()
+    assert not ctrl._prefs_dialog.isModal()
+    ctrl.show_preferences()  # second call must reuse the same dialog
+    ctrl._prefs_dialog.close()
+    app.processEvents()
+    assert ctrl._prefs_dialog is None
+    # OCR flow with a blank capture must not crash regardless of tesseract
     ctrl.quit()
 
 check("app controller wiring (pin/copy/F3-clipboard)", test_app_controller)

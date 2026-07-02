@@ -54,6 +54,7 @@ class PreferencesDialog(QDialog):
     """
 
     shortcuts_changed = Signal()
+    settings_saved = Signal()
 
     def __init__(self, config: AppConfig, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -64,7 +65,9 @@ class PreferencesDialog(QDialog):
 
         self.setWindowTitle("PinSnap – Preferencias")
         self.setMinimumSize(520, 480)
-        self.setModal(True)
+        # Non-modal: a modal dialog blocks the whole app, so a capture
+        # started via global hotkey would freeze under it.
+        self.setModal(False)
 
         layout = QVBoxLayout(self)
         self._tabs = QTabWidget()
@@ -301,5 +304,6 @@ class PreferencesDialog(QDialog):
 
         if shortcuts_changed:
             self.shortcuts_changed.emit()
+        self.settings_saved.emit()
 
         self.accept()

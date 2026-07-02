@@ -19,6 +19,7 @@ from PySide6.QtGui import QClipboard, QGuiApplication, QPixmap
 from PySide6.QtWidgets import QApplication, QFileDialog, QWidget
 
 from .config import AppConfig
+from .theme import apply_theme
 from .tray import SystemTray
 from .shortcuts import GlobalShortcutManager
 from .capture.overlay import CaptureOverlay
@@ -42,12 +43,14 @@ class PinSnapApp(QObject):
         super().__init__()
         self.app = app
         self.config = AppConfig()
+        apply_theme(app, self.config.theme)
         self.tray = SystemTray(self)
         self.shortcut_manager = GlobalShortcutManager(self)
         self._active_pinned: List[PinWindow] = []
         # Keeps overlays / editors / pickers / rulers alive (see module docstring)
         self._windows: List[QWidget] = []
         self._overlay_open = False
+        self._prefs_dialog: PreferencesDialog | None = None
 
         self.tray.capture_requested.connect(self.start_capture)
         self.tray.pin_requested.connect(self.start_pin_capture)
@@ -134,6 +137,12 @@ class PinSnapApp(QObject):
         if self._overlay_open:
             logger.debug("Capture overlay already open – ignoring")
             return
+        # A modal dialog (file chooser, message box…) blocks input to
+        # every other window: opening the fullscreen overlay under it
+        # would leave the screen covered and unresponsive.
+        if QApplication.activeModalWidget() is not None:
+            logger.debug("Modal dialog active – ignoring capture request")
+            return
 
         backend = get_capture_backend()
         overlay = CaptureOverlay(backend, default_action=default_action)
@@ -157,6 +166,8 @@ class PinSnapApp(QObject):
                 QApplication.clipboard().setPixmap(pixmap)
         elif action == "save":
             self._save_screenshot_dialog(pixmap)
+        elif action == "ocr":
+            self._run_ocr(pixmap)
         else:  # "copy"
             QApplication.clipboard().setPixmap(pixmap)
             logger.info("Screenshot copied to clipboard (%dx%d)", pixmap.width(), pixmap.height())
@@ -211,6 +222,54 @@ class PinSnapApp(QObject):
         if self.config.copy_to_clipboard_after_capture:
             clipboard: QClipboard = QApplication.clipboard()
             clipboard.setPixmap(pixmap)
+
+    # ------------------------------------------------------------------
+    # OCR
+    # ------------------------------------------------------------------
+
+    def _run_ocr(self, pixmap: QPixmap) -> None:
+        """Recognise text in *pixmap*, copy it, and show it in a window."""
+        from PySide6.QtWidgets import QMessageBox
+
+        from .ocr import ocr_pixmap
+
+        text, error = ocr_pixmap(pixmap)
+        if error is not None:
+            QMessageBox.warning(None, "PinSnap – OCR", error)
+            return
+        if not text:
+            QMessageBox.information(
+                None, "PinSnap – OCR", "No se reconoció ningún texto en la selección."
+            )
+            return
+
+        QGuiApplication.clipboard().setText(text)
+        self._show_ocr_result(text)
+        logger.info("OCR recognised %d characters (copied to clipboard)", len(text))
+
+    def _show_ocr_result(self, text: str) -> None:
+        from PySide6.QtWidgets import QLabel, QPlainTextEdit, QPushButton, QVBoxLayout
+
+        window = QWidget()
+        window.setWindowTitle("PinSnap – Texto reconocido")
+        window.resize(460, 320)
+        layout = QVBoxLayout(window)
+
+        info = QLabel("El texto ya está copiado al portapapeles. Puedes editarlo aquí:")
+        info.setWordWrap(True)
+        layout.addWidget(info)
+
+        edit = QPlainTextEdit(text)
+        layout.addWidget(edit)
+
+        btn = QPushButton("Copiar de nuevo y cerrar")
+        btn.clicked.connect(
+            lambda: (QGuiApplication.clipboard().setText(edit.toPlainText()), window.close())
+        )
+        layout.addWidget(btn)
+
+        self._track(window)
+        window.show()
 
     # ------------------------------------------------------------------
     # Pin to screen
@@ -278,9 +337,27 @@ class PinSnapApp(QObject):
     # ------------------------------------------------------------------
 
     def show_preferences(self) -> None:
+        # Single instance, non-modal: a modal dialog would freeze a
+        # capture started via global hotkey while it is open.
+        if self._prefs_dialog is not None:
+            self._prefs_dialog.raise_()
+            self._prefs_dialog.activateWindow()
+            return
+
         dialog = PreferencesDialog(self.config)
+        self._prefs_dialog = dialog
         dialog.shortcuts_changed.connect(self._reload_shortcuts)
-        dialog.exec()
+        dialog.settings_saved.connect(self._on_settings_saved)
+        dialog.finished.connect(self._on_prefs_closed)
+        dialog.show()
+
+    def _on_settings_saved(self) -> None:
+        apply_theme(self.app, self.config.theme)
+
+    def _on_prefs_closed(self, *_args) -> None:
+        if self._prefs_dialog is not None:
+            self._prefs_dialog.deleteLater()
+            self._prefs_dialog = None
 
     # ------------------------------------------------------------------
     # Quit
